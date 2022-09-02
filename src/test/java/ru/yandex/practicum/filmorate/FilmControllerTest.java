@@ -23,7 +23,7 @@ class FilmControllerTest {
         testFilm.setId(100);
         testFilm.setName("TestFilm");
         testFilm.setDescription("Test description");
-        testFilm.setReleaseDate("2011-11-11");
+        testFilm.setReleaseDate("2010-10-10");
         testFilm.setDuration(2);
     }
 
@@ -55,7 +55,7 @@ class FilmControllerTest {
 
     @Test
     public void shouldDeclineFilmWithIncorrectReleaseDate() {
-        testFilm.setReleaseDate("1995-11-11");
+        testFilm.setReleaseDate("1895-12-27");
         assertThrows(ValidationException.class, () -> filmController.checkIsFilmDataCorrect(testFilm));
     }
 

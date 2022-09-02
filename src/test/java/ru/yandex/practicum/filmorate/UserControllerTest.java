@@ -22,7 +22,7 @@ class UserControllerTest {
         testUser = new User();
         testUser.setName("Alex");
         testUser.setLogin("TestUser");
-        testUser.setBirthday("2011-11-11");
+        testUser.setBirthday("2010-10-10");
         testUser.setEmail("Alex@alex.ru");
     }
 
@@ -60,7 +60,7 @@ class UserControllerTest {
     public void shouldDeclineUserWithIncorrectBirthDay() {
         testUser.setBirthday(null);
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setBirthday("2024-11-11");
+        testUser.setBirthday("2023-10-10");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
