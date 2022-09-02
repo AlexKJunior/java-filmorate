@@ -20,10 +20,10 @@ class UserControllerTest {
     @BeforeEach
     public void beforeEach() {
         testUser = new User();
-        testUser.setName("Ivan");
+        testUser.setName("Alex");
         testUser.setLogin("TestUser");
         testUser.setBirthday("2010-10-10");
-        testUser.setEmail("Ivan@ivan.ru");
+        testUser.setEmail("Alex@alex.ru");
     }
 
     @Test
@@ -40,7 +40,7 @@ class UserControllerTest {
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
         testUser.setEmail(" ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setEmail("Ivan.ivan.ru");
+        testUser.setEmail("Alex.alex.ru");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
@@ -52,7 +52,7 @@ class UserControllerTest {
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
         testUser.setLogin(" ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
-        testUser.setLogin("Ivan ");
+        testUser.setLogin("Alex ");
         assertThrows(ValidationException.class, () -> userController.checkIsUserDataCorrect(testUser));
     }
 
