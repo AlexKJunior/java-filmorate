@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.entity;
+package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;

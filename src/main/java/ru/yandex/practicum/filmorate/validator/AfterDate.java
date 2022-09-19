@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.config.validator;
+package ru.yandex.practicum.filmorate.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ru.yandex.practicum.filmorate.config.validator.AfterDateValidator.class)
+@Constraint(validatedBy = ru.yandex.practicum.filmorate.validator.AfterDateValidator.class)
 @Documented
 public @interface AfterDate {
 

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.entity.User;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
@@ -59,31 +59,5 @@ public class UserController {
     public User updateUserRootMapping(@Valid @RequestBody User user) {
         log.info("Request to update user with id = {}, parameters to update: {}", user.getId() ,user);
         return userService.updateUser(user.getId(), user);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("{id}/friends/{friendId}")
-    public User addFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
-        log.info("Request to add a user with id = {} as a friend to a user with id ={}", id ,friendId);
-        return userService.addFriend(id, friendId);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
-        log.info("Request to remove user with id = {} from friends of user with id = {}", friendId, id);
-        userService.removeFriend(id, friendId);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("{id}/friends")
-    public List<User> getUsersFriends(@PathVariable("id") Long id) {
-        return userService.getUserFriends(id);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("{id}/friends/common/{otherId}")
-    public List<User> getCommonUsersFriends(@PathVariable("id") Long id, @PathVariable("otherId") Long otherId) {
-        return userService.getCommonUsersFriends(id, otherId);
     }
 }

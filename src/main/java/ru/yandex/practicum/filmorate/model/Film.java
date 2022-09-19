@@ -1,8 +1,8 @@
-package ru.yandex.practicum.filmorate.entity;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import ru.yandex.practicum.filmorate.config.validator.AfterDate;
+import ru.yandex.practicum.filmorate.validator.AfterDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

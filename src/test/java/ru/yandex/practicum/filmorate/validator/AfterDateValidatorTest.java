@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.config.validator;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.entity.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.*;
 import java.time.LocalDate;
