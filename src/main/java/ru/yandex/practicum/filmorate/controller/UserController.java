@@ -28,7 +28,7 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User updatedUser) {
-        log.info("Received a request to update user data id={}", updatedUser.getId());
+        log.info("Received a request to updte user data id={}", updatedUser.getId());
         return userService.updateUser(updatedUser);
     }
 

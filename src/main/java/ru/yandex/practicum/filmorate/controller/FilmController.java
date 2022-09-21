@@ -43,7 +43,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film updatedFilm) {
-        log.info("Received a request to update the movie id={}", updatedFilm.getId());
+        log.info("Received a request to upate the movie id={}", updatedFilm.getId());
         return filmService.updateFilm(updatedFilm);
     }
 
