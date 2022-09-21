@@ -52,7 +52,7 @@ public class UserService {
             } else return null;
         } else {
             log.info("User id={} not found", updatedUser.getId());
-            throw new ObjectNotFoundException(String.format("Failed to update user data id=%s т.к. " +
+            throw new ObjectNotFoundException(String.format("Failed to updte user data id=%s т.к. " +
                     "user not found", updatedUser.getId()));
         }
     }
