@@ -1,20 +1,26 @@
 package ru.yandex.practicum.filmorate.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"email", "login"})
 @ToString(exclude = {"likesFilms", "users", "friends"})
+@ToString(exclude = "films")
 @Builder
 @Entity
 @Table(name = "users")
@@ -82,4 +88,12 @@ public class User {
         friends.remove(user);
         user.getFriends().remove(this);
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_films",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id")
+    )
+    private List<Film> films = new ArrayList<>();
 }
