@@ -1,68 +1,44 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
-import ru.yandex.practicum.filmorate.validator.AfterDate;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(exclude = "usersLikes")
-@ToString(exclude = "usersLikes")
-@Builder
-@Entity
-@Table(name = "films")
+@EqualsAndHashCode(of = {"id"})
 public class Film {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotNull(message = "Film name should not be empty")
-    @NotBlank(message = "Film name should not be empty")
+    private static int identificator = 0;
+    private int id;
+    @NotBlank(message = "The name of the movie is not specified")
     private String name;
-
-    @Length(max = 200, message = "Should be less than 200 characters")
-    @Column(length = 200)
+    @Size(max = 200, message = "The length of the description should be from 0 to 200 characters")
     private String description;
+    @NotNull(message = "No release date specified")
+    private String releaseDate;
+    @Min(1)
+    private long duration;
+    private int rate;
+    private Set<Integer> setOfLikes;
 
-    @AfterDate(day = 28, month = 12, year = 1895, message = "Release date should be not earlier than december 28, 1895")
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
-
-    @PositiveOrZero
-    private Integer duration;
-
-    @Builder.Default
-    @PositiveOrZero
-    private Integer rate = 0;
-
-    @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "users_likes_films",
-            joinColumns = @JoinColumn(name = "film_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @Column(name = "user_likes")
-    private List<User> usersLikes = new ArrayList<>();
-
-    public void addUserLike(User user) {
-        this.rate++;
-        usersLikes.add(user);
-        user.getLikesFilms().add(this);
+    public void generateAndSetId() {
+        setId(++identificator);
     }
 
-    public void removeUserLike(User user) {
-        this.rate--;
-        usersLikes.remove(user);
-        user.getLikesFilms().remove(this);
+    public void generateSetOfLikes() {
+        this.setOfLikes = new HashSet<>();
+    }
+
+    public void addLike(int userId) {
+        setOfLikes.add(userId);
+    }
+
+    public void deleteLike(int userId) {
+        setOfLikes.remove(userId);
     }
 }
