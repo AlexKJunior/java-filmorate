@@ -22,7 +22,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return newFilm;
     }
 
-    public Film updateFilm(Film updatedFilm){
+    public Film updateFilm(Film updatedFilm) {
         updatedFilm.setSetOfLikes(films.get(updatedFilm.getId()).getSetOfLikes());
         films.put(updatedFilm.getId(), updatedFilm);
         log.info("Movie data id = {} updated", updatedFilm.getId());
@@ -34,17 +34,17 @@ public class InMemoryFilmStorage implements FilmStorage {
         return new ArrayList<>(films.values());
     }
 
-    public Film getFilmById(int filmId){
+    public Film getFilmById(int filmId) {
         log.info("A movie appears id={}", filmId);
         return films.get(filmId);
     }
 
-    public void addLike(int filmId, int userId){
+    public void addLike(int filmId, int userId) {
         films.get(filmId).addLike(userId);
         log.info("Movie id = {} added user  like id={}", filmId, userId);
     }
 
-    public void deleteLike(int filmId, int userId){
+    public void deleteLike(int filmId, int userId) {
         films.get(filmId).deleteLike(userId);
         log.info("For the movie id = {}, the user's like  has been removed id={}", filmId, userId);
     }
@@ -57,7 +57,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.containsKey(filmId);
     }
 
-    public boolean checkIsFilmHasLikeFromUser(int filmId, int userId){
+    public boolean checkIsFilmHasLikeFromUser(int filmId, int userId) {
         return films.get(filmId).getSetOfLikes().contains(userId);
     }
 }

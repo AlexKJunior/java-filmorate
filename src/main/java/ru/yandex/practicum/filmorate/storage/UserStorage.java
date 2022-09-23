@@ -12,7 +12,7 @@ public interface UserStorage {
 
     User addUser(User newUser);
 
-    void addFriend(int userId,int friendId);
+    void addFriend(int userId, int friendId);
 
     User updateUser(User updatedUser);
 
