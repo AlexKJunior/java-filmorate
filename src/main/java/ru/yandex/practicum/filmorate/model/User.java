@@ -1,47 +1,40 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = {"email", "login"})
-@ToString(exclude = "films")
-@Builder
-@Entity
-@Table(name = "users")
+@EqualsAndHashCode(of = {"id"})
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email should not be blank")
-    @Column(unique = true, nullable = false)
+    private static int identificator = 0;
+    private int id;
+    @Email(message = "Invalid specified email")
     private String email;
-
-    @NotBlank(message = "Login should not be blank")
-    @Pattern(regexp = "[a-zA-Z0-9_.]*", message = "Login should not contain spaces")
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Login not specified")
     private String login;
-
     private String name;
+    @NotBlank(message = "Date of birth not specified")
+    private String birthday;
+    private Set<Integer> setOfFriends;
 
-    @Past
-    private LocalDate birthday;
+    public void generateAndSetId() {
+        setId(++identificator);
+    }
 
-    @Builder.Default
-    @ManyToMany
-    @JoinTable(
-            name = "users_films",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
-    private List<Film> films = new ArrayList<>();
+    public void generateSetOfFriends() {
+        this.setOfFriends = new HashSet<>();
+    }
+
+    public void addFriend(int friendId) {
+        setOfFriends.add(friendId);
+    }
+
+    public void deleteFriend(int friend) {
+        setOfFriends.remove(friend);
+    }
 }
