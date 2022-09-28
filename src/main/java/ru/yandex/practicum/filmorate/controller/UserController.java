@@ -2,18 +2,16 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController implements Controllers<User> {
     private final UserService userService;
 
     @Autowired
@@ -21,43 +19,56 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @Override
     @PostMapping
-    public User newUser(@Valid @RequestBody User user) {
-        log.info("Request to create new user: " + user.toString());
-        return userService.createUser(user);
+    public User add(@RequestBody User newUser) {
+        log.info("Получен запрос на добавление нового пользователя");
+        return userService.add(newUser);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    public List<User> findAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") Long id, @Valid @RequestBody User user) {
-        log.info("Request to update user with id = {}, parameters to update: {}", id ,user.toString());
-        return userService.updateUser(id, user);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{id}")
-    public User findOneUser(@PathVariable("id") Long id) {
-        return userService.getUserById(id);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") Long id) {
-        log.info("Request to delete user with {}, parameters to update: ", id);
-        userService.removeUserById(id);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
+    @Override
     @PutMapping
-    public User updateUserRootMapping(@Valid @RequestBody User user) {
-        log.info("Request to update user with id = {}, parameters to update: {}", user.getId() ,user);
-        return userService.updateUser(user.getId(), user);
+    public User update(@RequestBody User updatedUser) {
+        log.info("Получен запрос на обновление данных пользователя id={}", updatedUser.getId());
+        return userService.update(updatedUser);
+    }
+
+    @Override
+    @GetMapping("{id}")
+    public User getById(@PathVariable("id") int userId) {
+        log.info("Получен запрос на получение пользователя id={}", userId);
+        return userService.getById(userId);
+    }
+
+    @Override
+    @GetMapping
+    public List<User> getAll() {
+        log.info("Получен запрос на получение списка пользователей");
+        return userService.getAll();
+    }
+
+    @PutMapping("{id}/friends/{friendId}")
+    public void addFriend(@PathVariable("id") int userId, @PathVariable int friendId) {
+        log.info("Получен запрос на добавление польхователя id={} в друзья пользователю id={}", friendId, userId);
+        userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable("id") int userId, @PathVariable("friendId") int friendId) {
+        log.info("Получен запрос на удаление польхователя id={} из друзей пользователя id={}", friendId, userId);
+        userService.deleteFriend(userId, friendId);
+    }
+
+    @GetMapping("{id}/friends")
+    @ResponseBody
+    public List<User> getListOfFriends(@PathVariable("id") int userId) {
+        log.info("Получен запрос на получения списка друзей пользователя id={}", userId);
+        return userService.getListOfFriends(userId);
+    }
+
+    @GetMapping("{id}/friends/common/{otherId}")
+    List<User> getListOfCommonFriends(@PathVariable("id") int userId, @PathVariable("otherId") int friendId) {
+        log.info("Получен запрос на получение общего списка друзей пользователей id={} и id={}", userId, friendId);
+        return userService.getListOfCommonFriends(userId, friendId);
     }
 }

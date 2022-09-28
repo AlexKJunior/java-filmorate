@@ -1,48 +1,81 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.error.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.repository.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Service
-public class FilmService {
-    private final FilmRepository filmRepository;
+public class FilmService implements Services<Film> {
+    private final FilmDbStorage filmDbStorage;
+    private final DateTimeFormatter dateTimeFormatter;
+    private final static Instant MIN_RELEASE_DATA = Instant.from(ZonedDateTime.of(LocalDateTime.of(1895, 12,
+            28, 0, 0), ZoneId.of("Europe/Moscow")));
 
     @Autowired
-    public FilmService(FilmRepository filmRepository) {
-        this.filmRepository = filmRepository;
+    public FilmService(@Qualifier("filmDbStorage") FilmDbStorage filmDbStorage) {
+        this.filmDbStorage = filmDbStorage;
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
 
-    public Film createFilm(Film film) {
-        return filmRepository.save(film);
+    @Override
+    public List<Film> getAll() {
+        return filmDbStorage.getAll();
     }
 
-    public List<Film> getAllFilms() {
-        return filmRepository.findAll();
+    @Override
+    public Film getById(int filmId) {
+        return filmDbStorage.getById(filmId);
     }
 
-    public Film updateFilm(Long id, Film newFilm) {
-        return filmRepository.findById(id)
-                .map(f -> {
-                    f.setName(newFilm.getName());
-                    f.setDescription(newFilm.getDescription());
-                    f.setReleaseDate(newFilm.getReleaseDate());
-                    f.setDuration(newFilm.getDuration());
-                    return filmRepository.save(f);
-                })
-                .orElseThrow(() -> new FilmNotFoundException(id));
+    @Override
+    public Film add(Film newFilm) {
+        if (checkIsFilmDataCorrect(newFilm)) {
+            return filmDbStorage.add(newFilm);
+        }
+        return null;
     }
 
-    public Film getFilmById(Long id) {
-        return filmRepository.findById(id)
-                .orElseThrow(() -> new FilmNotFoundException(id));
+    @Override
+    public Film update(Film updatedFilm) {
+        if (checkIsFilmDataCorrect(updatedFilm)) {
+            return filmDbStorage.update(updatedFilm);
+        }
+        return null;
     }
 
-    public void removeFilmById(Long id) {
-        filmRepository.deleteById(id);
+    public void addLike(int filmId, int userId) {
+        filmDbStorage.addLike(filmId, userId);
+    }
+
+    public void deleteLike(int filmId, int userId) {
+        filmDbStorage.deleteLike(filmId, userId);
+    }
+
+    public List<Film> getPopularFilms(int count) {
+        return filmDbStorage.getPopularFilms(count);
+    }
+
+    public boolean checkIsFilmDataCorrect(Film newFilm) {
+        if (getInstance(newFilm.getReleaseDate()).isBefore(MIN_RELEASE_DATA)) {
+            log.info("Указана некорректная дата выхода фильма");
+            throw new ValidationException(String.format("Указана некорректная дата выхода фильма. Требуется дата" +
+                    " не ранее %s", MIN_RELEASE_DATA));
+        } else {
+            return true;
+        }
+    }
+
+    private Instant getInstance(String time) {
+        return Instant.from(ZonedDateTime.of(LocalDate.parse(time, dateTimeFormatter),
+                LocalTime.of(0, 0), ZoneId.of("Europe/Moscow")));
     }
 }
