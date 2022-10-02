@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -66,6 +66,9 @@ public class FilmDbStorage implements Storages<Film> {
             stmt.setString(3, newFilm.getReleaseDate());
             stmt.setInt(4, newFilm.getDuration());
             stmt.setInt(5, newFilm.getMpa().getId());
+            if (newFilm.getMpa() == null) {
+                return null;
+            }
             return stmt;
         }, keyHolder);
         newFilm.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
@@ -159,16 +162,7 @@ public class FilmDbStorage implements Storages<Film> {
     }
 
     public List<Film> getPopularFilms(int count) {
-        String sqlQuery = " SELECT film_full_info.film_id, " +
-                "film_full_info.film_name, " +
-                "film_full_info.description, " +
-                "film_full_info.duration, " +
-                "film_full_info.rating, " +
-                "film_full_info.rating_name, " +
-                "film_full_info.release_date, " +
-                "film_full_info.genre_id_name, " +
-                "count (fl.user_id) " +
-                "FROM films_likes AS fl RIGHT JOIN " +
+        String sqlQuery = " SELECT * FROM films_likes AS fl RIGHT JOIN " +
 
                 "(WITH  result_film_Id_genre AS " +
                 "(SELECT fg.film_id, " +

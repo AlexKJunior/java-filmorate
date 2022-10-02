@@ -20,6 +20,7 @@ public class GenreService implements Services<Genre> {
         return storages.getAll();
     }
 
+    @Override
     public Genre getById(int genreId) {
         return storages.getById(genreId);
     }
