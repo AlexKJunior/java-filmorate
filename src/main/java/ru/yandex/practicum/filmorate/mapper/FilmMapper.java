@@ -41,7 +41,8 @@ public class FilmMapper implements RowMapper<Film> {
                         .build());
             }
             return listOfGenres;
-        }
+        } else {
             return null;
         }
     }
+}

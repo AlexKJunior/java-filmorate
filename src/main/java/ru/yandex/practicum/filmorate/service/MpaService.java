@@ -20,7 +20,6 @@ public class MpaService implements Services<Mpa> {
         return storages.getAll();
     }
 
-    @Override
     public Mpa getById(int ratingId) {
         return storages.getById(ratingId);
     }
